@@ -1,7 +1,9 @@
 import asyncio
 import logging
 from aiogram import Router, Dispatcher, types, Bot
+from handlers import common, trades
 from config import BOT_TOKEN
+from database.models import init_models
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -11,9 +13,10 @@ async def error_handler(event: types.ErrorEvent):
     logging.error(f"ОШИБКА: {event.exception}")
 
 async def main():
+    await init_models()
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher()
-    dp.include_router(router)
+    dp.include_routers(router, common.router, trades.router)
 
     logging.info('Бот запущен')
     await dp.start_polling(bot)

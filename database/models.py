@@ -14,6 +14,7 @@ class User(Base):
     referrer_id = Column(BigInteger)
     reg_date = Column(DateTime, default=datetime.now)
     balance = Column(Numeric(10, 2), default=0.00)
+
     orders = relationship('Order', back_populates='user')
 
 class Order(Base):
@@ -29,11 +30,10 @@ class Order(Base):
     created_at = Column(DateTime)
     updated_at = Column(DateTime)
     description = Column(String)
+    status = Column(String)
 
     user = relationship('User', back_populates='orders')
 
 async def init_models():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-
-asyncio.run(init_models())
