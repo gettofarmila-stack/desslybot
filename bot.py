@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from aiogram import Router, Dispatcher, types, Bot
-from handlers import common, trades
+from handlers import common, steam_refill
 from config import BOT_TOKEN
 from database.models import init_models
 
@@ -16,7 +16,7 @@ async def main():
     await init_models()
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher()
-    dp.include_routers(router, common.router, trades.router)
+    dp.include_routers(router, common.router, steam_refill.router)
 
     logging.info('Бот запущен')
     await dp.start_polling(bot)

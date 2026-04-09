@@ -1,4 +1,4 @@
-from logic.api.trade_api import check_steam_login_api, create_steam_topup_order_api, checking_exchange_rate_api
+from logic.api.steam_refill_api import check_steam_login_api, create_steam_topup_order_api, checking_exchange_rate_api
 
 async def create_steam_topup_order(customer_id, login: str, amount: float):
     if amount < 0.1:
