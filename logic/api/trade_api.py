@@ -48,7 +48,7 @@ API_ERRORS = {
 }
 
 
-async def check_steam_login_api(login: str, amount: int):
+async def check_steam_login_api(login: str, amount: float):
     async with aiohttp.ClientSession() as session:
         try:
             url = 'https://desslyhub.com/api/v1/service/steamtopup/check_login'
@@ -69,7 +69,7 @@ async def check_steam_login_api(login: str, amount: int):
             logging.warning(f'Ошибка сети: {e}')
             return False
 
-async def create_steam_topup_order_api(customer_id, login: str, amount: int):
+async def create_steam_topup_order_api(customer_id, login: str, amount: float):
     async with aiohttp.ClientSession() as session:
         try:
             url = 'https://desslyhub.com/api/v1/service/steamtopup/topup'
