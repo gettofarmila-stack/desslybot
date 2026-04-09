@@ -13,8 +13,14 @@ def inline_main_menu():
     builder.row(types.InlineKeyboardButton(text='Главное меню', callback_data='main_menu', style='danger'))
     return builder.as_markup()
 
-def confirm_buttons(sum_in_usd):
+def confirm_buttons_login():
     builder = InlineKeyboardBuilder()
-    builder.row(types.InlineKeyboardButton(text='Подтвердить', callback_data=f'confirm_refill_{sum_in_usd}', style='success'))
+    builder.row(types.InlineKeyboardButton(text='Подтвердить', callback_data=f'currency_choise', style='success'))
+    builder.row(types.InlineKeyboardButton(text='Главное меню', callback_data='main_menu', style='danger'))
+    return builder.as_markup()
+
+def confirm_buttons(sum_in_usd, login):
+    builder = InlineKeyboardBuilder()
+    builder.row(types.InlineKeyboardButton(text='Подтвердить', callback_data=f'confirm_refill_{sum_in_usd}_{login}', style='success'))
     builder.row(types.InlineKeyboardButton(text='Главное меню', callback_data='main_menu', style='danger'))
     return builder.as_markup()

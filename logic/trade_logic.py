@@ -15,5 +15,8 @@ async def check_exchange_rate(amount, currency):
     exchange_rate = await checking_exchange_rate_api(currency=currency)
     if exchange_rate is False:
         return False
-    total_sum = amount / (exchange_rate * 1.02)
+    if exchange_rate == 1:
+        total_sum = amount
+    else:
+        total_sum = (amount / exchange_rate) * 1.02
     return round(total_sum, 2)
