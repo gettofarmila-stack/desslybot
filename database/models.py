@@ -34,6 +34,7 @@ class Order(Base):
 
     user = relationship('User', back_populates='orders')
 
+
 async def init_models():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
