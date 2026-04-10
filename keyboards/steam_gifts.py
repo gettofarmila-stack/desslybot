@@ -19,6 +19,7 @@ def games_builder(all_games: list=GAMES_CACHE, page: int=0):
         nav_buttons.append(types.InlineKeyboardButton(text='Вперед ➡️', callback_data=f'games_page_{page + 1}', style='danger'))
     if nav_buttons:
         builder.row(*nav_buttons)
+    builder.row(types.InlineKeyboardButton(text='Очистить поиск', callback_data='clear_search', style='danger'))
     builder.row(types.InlineKeyboardButton(text='Главное меню', callback_data='main_menu', style='danger'))
     return builder.as_markup()
 
@@ -38,7 +39,7 @@ def regions_builder(reg_info: list, package_id: int):
         if edition.get('package_id') == package_id:
             for reg in edition.get('regions_info', []):
                 btn_text = f"{reg['region']}: {reg['price']}$"
-                callback = f"gift_{reg['region']}_{package_id}"
+                callback = f"gift_{reg['region']}_{package_id}_{reg['price']}"
                 builder.add(types.InlineKeyboardButton(text=btn_text, callback_data=callback, style='primary'))
     builder.adjust(2) 
     builder.row(types.InlineKeyboardButton(text='⬅️ Назад к изданиям', callback_data='back_to_editions', style='danger'))

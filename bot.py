@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from aiogram import Router, Dispatcher, types, Bot
-from handlers import common, steam_refill, steam_gifts
+from handlers import common, steam_refill, steam_gifts, error
 from config import BOT_TOKEN
 from database.models import init_models
 from utils.gift_games_list import on_startup
@@ -17,6 +17,7 @@ async def main():
     await init_models()
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher()
+    dp.include_router(error.router)
     dp.include_routers(router, common.router, steam_refill.router, steam_gifts.router)
 
     dp.startup.register(on_startup)

@@ -1,7 +1,8 @@
 import aiohttp
 import asyncio
 import logging
-from config import DESSLY_TOKEN, API_ERRORS
+from config import DESSLY_TOKEN
+from utils.exceptions import API_ERRORS, BotError
 
 
 async def get_games_list():
@@ -45,3 +46,20 @@ async def get_game_info_api(app_id):
         except Exception as e:
             logging.warning(f'Ошибка системы: {e}')
             return False
+        
+async def create_gift_order_api(steam_link, region, package_id):
+    async with aiohttp.ClientSession() as session:
+        try:
+            url = 'https://desslyhub.com/api/v1/service/steamgift/sendgames'
+            payload = {'invite_url': steam_link, 'package_id': package_id, 'region': region}
+            headers = {'apikey': DESSLY_TOKEN, 'content-type': 'application/json'}
+            async with session.post(url, json=payload, headers=headers) as response:
+                raw_data = await response.json()
+                if raw_data.get('transaction_id'):
+                    return raw_data
+                error_code = raw_data.get('error_code')
+                error_text = API_ERRORS.get(error_code, 'Неизвестная ошибка API')
+                raise BotError(f'Ошибка API: {error_text}')
+        except Exception as e:
+            logging.error(f'Системная ошибка API: {e}')
+            raise BotError('Сервис временно недоступен, попробуйте позже!')

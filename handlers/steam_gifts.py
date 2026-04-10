@@ -5,9 +5,12 @@ from utils.gift_games_list import GAMES_CACHE
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from logic.steam_gift import searching_games, game_info_rendering
+from logic.steam_gift import searching_games, game_info_rendering, steam_order_processing
+from config import INVITE_LINK_PHOTO
+from aiogram.types import InputMediaPhoto
 class GameSearching(StatesGroup):
     waiting_for_game = State()
+    waiting_friend_link = State()
 
 router = Router()
 
@@ -29,7 +32,7 @@ async def games_page_rendering(callback: types.CallbackQuery, state: FSMContext)
 @router.callback_query(F.data == 'search_by_name')
 async def game_search_waiting(callback: types.CallbackQuery, state: FSMContext):
     builder = InlineKeyboardBuilder()
-    builder.row(types.InlineKeyboardButton(text='Назад к играм (сбрасывает поиск)', callback_data='steam_gifts', style='danger'))
+    builder.row(types.InlineKeyboardButton(text='Назад к играм', callback_data='steam_gifts', style='danger'))
     builder.row(types.InlineKeyboardButton(text='Главное меню', callback_data='main_menu', style='danger'))
     await callback.message.edit_text('Введите название игры, не меньше 3х символов', reply_markup=builder.as_markup())
     await state.set_state(GameSearching.waiting_for_game)
@@ -72,4 +75,44 @@ async def back_to_editions_handler(callback: types.CallbackQuery, state: FSMCont
     if not data:
         return await callback.answer("Данные потерялись, начни поиск заново", show_alert=True)
     await callback.message.edit_text('Выбери издание:', reply_markup=editions_builder(data))
+    await callback.answer()
+
+@router.callback_query(F.data == 'clear_search')
+async def clear_search_handler(callback: types.CallbackQuery, state: FSMContext):
+    await state.update_data(games_list=None)
+    await callback.answer('Успешно сброшено, перелистните страницу')
+
+@router.callback_query(F.data.startswith('gift_'))
+async def take_user_steam_link(callback: types.CallbackQuery, state: FSMContext):
+    region = callback.data.split('_')[1]
+    package_id = callback.data.split('_')[2]
+    price = callback.data.split('_')[3]
+    await state.update_data(region=region, package_id=package_id, price=price)
+    await callback.message.edit_media(media=InputMediaPhoto(media=INVITE_LINK_PHOTO, caption='Отправьте вашу быструю ссылку на дружбу в формате s.team/p/...'), reply_markup=inline_main_menu())
+    await state.set_state(GameSearching.waiting_friend_link)
+
+@router.message(GameSearching.waiting_friend_link)
+async def order_confirm_handler(message: types.Message, state: FSMContext):
+    await message.delete()
+    if not 's.team/p/' in message.text:
+        return await message.answer('Проверьте вашу ссылку! Она должна быть формата s.team/p/')
+    raw_data = await state.get_data()
+    region = raw_data.get('region')
+    package_id = raw_data.get('package_id')
+    price = raw_data.get('price')
+    builder = InlineKeyboardBuilder()
+    builder.row(types.InlineKeyboardButton(text='Подтвердить', callback_data=f'confirm_{message.text}_{region}_{package_id}', style='success'))
+    builder.row(types.InlineKeyboardButton(text='Главное меню', callback_data='main_menu', style='danger'))
+    await message.answer(f'Вы уверены, что хотите купить данный товар на сумму {price}$?', reply_markup=builder.as_markup())
+
+@router.callback_query(F.data.startswith('confirm_'))
+async def order_processing_handler(callback: types.CallbackQuery, state: FSMContext):
+    formatter = callback.data.split('_')
+    steam_link = formatter[1]
+    region = formatter[2]
+    package_id = formatter[3]
+    raw_data = await state.get_data()
+    price = raw_data.get('price')
+    result = await steam_order_processing(uid=callback.from_user.id, steam_link=steam_link, region=region, package_id=package_id, price=price)
+    await callback.message.edit_text(result, reply_markup=inline_main_menu())
     await callback.answer()

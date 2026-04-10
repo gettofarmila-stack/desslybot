@@ -2,7 +2,8 @@
 import aiohttp
 import asyncio
 import logging
-from config import DESSLY_TOKEN, API_ERRORS
+from config import DESSLY_TOKEN
+from utils.exceptions import API_ERRORS
 from logic.repository.steam_refill_rep import create_steam_topup_order_db
 
 
