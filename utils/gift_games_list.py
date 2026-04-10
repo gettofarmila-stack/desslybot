@@ -16,8 +16,8 @@ async def update_games_task(interval=3600):
             GAMES_CACHE.extend(games)
             logging.info(f'Успешно загружено {len(games)} игр!')
         else:
-            logging.error('При обновлении списка игр что-то пошло не так, попробую позже...')
-            await asyncio.sleep(300)
+            logging.error('При обновлении списка игр что-то пошло не так, попробую ещё раз...')
+            await asyncio.sleep(10)
             continue
         await asyncio.sleep(interval)
 
