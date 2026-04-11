@@ -1,7 +1,7 @@
 from aiogram import types, F, Router
 from keyboards.steam_gifts import games_builder, editions_builder, regions_builder
 from keyboards.steam_refill_keyboards import inline_main_menu
-from utils.gift_games_list import GAMES_CACHE
+from utils.get_cache import GAMES_CACHE
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.keyboard import InlineKeyboardBuilder

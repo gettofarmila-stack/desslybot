@@ -1,6 +1,6 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram import types
-from utils.gift_games_list import GAMES_CACHE
+from utils.get_cache import GAMES_CACHE
 
 
 def games_builder(all_games: list=GAMES_CACHE, page: int=0):

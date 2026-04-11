@@ -2,8 +2,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path='config.env')
-
-DEBUG_MODE = False
+ 
+DEBUG_MODE = False   # изменить на True, чтобы включить режим тестирования (позволяет тестировать функции без апи, допустим у вас там нет денег)
 
 #просто данные
 BOT_TOKEN = os.getenv('TOKEN')
