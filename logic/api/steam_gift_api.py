@@ -1,7 +1,6 @@
 import aiohttp
-import asyncio
 import logging
-from config import DESSLY_TOKEN
+from config import DESSLY_TOKEN, DEBUG_MODE
 from utils.exceptions import API_ERRORS, BotError
 
 
@@ -21,10 +20,10 @@ async def get_games_list():
                     error_text = API_ERRORS.get(error_code)
                     logging.warning(f'Ошибка ({error_code}): {error_text}')
                     return False
-                logging.warning('Неизвестная ошибка от API!')
+                logging.error('Неизвестная ошибка от API!')
                 return False
         except Exception as e:
-            logging.warning(f'Ошибка системы: {e}')
+            logging.error(f'Ошибка системы: {e}')
             return False
         
 async def get_game_info_api(app_id):
@@ -37,17 +36,17 @@ async def get_game_info_api(app_id):
                 if raw_data.get('game'):
                     return(raw_data.get('game'))
                 error_code = raw_data.get('error_code')
-                if error_code:
-                    error_text = API_ERRORS.get(error_code)
-                    logging.warning(f'Ошибка ({error_code}): {error_text}')
-                    return False
-                logging.warning('Неизвестная ошибка от API')
-                return False
+                error_text = API_ERRORS.get(error_code, 'Неизвестная ошибка от API')
+                logging.error(f'Ошибка API: {error_text}')
+                raise BotError(f'Ошибка от API: {error_text}')
         except Exception as e:
-            logging.warning(f'Ошибка системы: {e}')
-            return False
+            logging.error(f'Ошибка системы: {e}')
+            raise BotError('Сервис временно недоступен, повторите попытку позже.')
         
 async def create_gift_order_api(steam_link, region, package_id):
+    global DEBUG_MODE
+    if DEBUG_MODE:
+        return {"transaction_id": "MOCK_12345", "status": "success"}
     async with aiohttp.ClientSession() as session:
         try:
             url = 'https://desslyhub.com/api/v1/service/steamgift/sendgames'

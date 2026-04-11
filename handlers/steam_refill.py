@@ -62,4 +62,4 @@ async def steam_refill_ordering_handler(callback: types.CallbackQuery, state: FS
     await state.clear()
     if not 'успешно создан' in order:
         return await callback.message.edit_media(media=InputMediaPhoto(media=ERROR_PHOTO, caption=order), reply_markup=inline_main_menu())
-    await callback.message.edit_media(media=InputMediaPhoto(SUCCESS_PHOTO, caption=order), reply_markup=inline_main_menu())
+    await callback.message.edit_media(media=InputMediaPhoto(media=SUCCESS_PHOTO, caption=order), reply_markup=inline_main_menu())

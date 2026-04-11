@@ -3,6 +3,7 @@ from sqlalchemy import select
 from database.models import User
 from database.engine import Session
 from utils.exceptions import DontHaveFunds, UserNotRegister
+from decimal import Decimal
 
 
 async def is_register(uid):
@@ -18,9 +19,10 @@ async def registrate_user(uid, referrer_id):
             session.add(new_user)
         
 async def charge_balance(user, amount):
-    if user.balance < amount:
+    decimal_amount = Decimal(str(amount))
+    if user.balance < decimal_amount:
         raise DontHaveFunds('Недостаточно средств на балансе!')
-    user.balance -= amount
+    user.balance -= decimal_amount
 
 async def refund_balance(user_id, amount):
     async with Session() as session:
@@ -30,4 +32,4 @@ async def refund_balance(user_id, amount):
             if not user:
                 logging.error(f'Юзеру {user_id} не удалось вернуть деньги')
                 raise UserNotRegister('Вы не зарегестрированы! Введите /start для регистрации')
-            user.balance += amount
+            user.balance += Decimal(str(amount))
