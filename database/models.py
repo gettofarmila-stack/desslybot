@@ -1,6 +1,6 @@
 import asyncio
 from sqlalchemy.orm import DeclarativeBase, relationship
-from sqlalchemy import Column, Integer, String, BigInteger, DateTime, Numeric, ForeignKey
+from sqlalchemy import Column, Integer, String, BigInteger, DateTime, Numeric, ForeignKey, JSON
 from datetime import datetime
 from database.engine import engine
 
@@ -16,6 +16,7 @@ class User(Base):
     balance = Column(Numeric(10, 2), default=0.00)
 
     orders = relationship('Order', back_populates='user')
+    vouchers = relationship('Voucher', back_populates='user')
 
 class Order(Base):
     __tablename__ = 'orders'
@@ -34,6 +35,16 @@ class Order(Base):
 
     user = relationship('User', back_populates='orders')
 
+class Voucher(Base):
+    __tablename__ = 'vouchers'
+    id = Column(Integer, primary_key=True)
+    owner_id = Column(BigInteger, ForeignKey('users.user_id'))
+    transaction_id = Column(String)
+    status = Column(String)
+    voucher_name = Column(String)
+    voucher = Column(JSON)
+
+    user = relationship('User', back_populates='vouchers')
 
 async def init_models():
     async with engine.begin() as conn:

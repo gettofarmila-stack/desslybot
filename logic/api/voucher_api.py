@@ -2,7 +2,7 @@
 import logging
 import aiohttp
 import asyncio
-from config import DESSLY_TOKEN
+from config import DESSLY_TOKEN, DEBUG_MODE
 from utils.exceptions import API_ERRORS, BotError
 
 
@@ -27,7 +27,30 @@ async def get_voucher_info_api(id):
                 if data.get('name'):
                     return data
                 error_text = API_ERRORS.get(data.get('error_code'), 'Unkown API Error')
-                logging.info(f'Ошибка от API: {error_text}')
+                logging.error(f'Ошибка от API: {error_text}')
+                raise BotError(f'Ошибка от API: {error_text}')
+        except BotError:
+            raise
+        except Exception as e:
+            logging.error(f'Ошибка от сервиса API: {e}')
+            raise BotError(f'Ошибка связи с сервером, напишите в поддержку если ошибка повторится')
+        
+async def buy_voucher_api(voucher_id, var_id):
+    global DEBUG_MODE
+    if DEBUG_MODE:
+        return {"transaction_uuid": "97945ca7-312c-4cc9-97fb-f27d07b81bff", "status": "success", "vouchers": [{"serialNumber": "123456", "pin": "zauvutfeq2wq237dm", "expiration": "2006-01-02 15:04:05"}]}
+    async with aiohttp.ClientSession() as session:
+        try:
+            url = 'https://desslyhub.com/api/v1/service/voucher/buy'
+            payload = {'root_id': voucher_id, 'variant_id': var_id}
+            headers = {'apikey': DESSLY_TOKEN, 'content-type': 'application/json'}
+            async with session.post(url, json=payload, headers=headers) as response:
+                data = await response.json()
+                if data.get('status'):
+                    return data
+                error_code = data.get('error_code')
+                error_text = API_ERRORS.get(error_code, 'Unkown API Error')
+                logging.error(f'Ошибка от API: {error_text} под {error_code}')
                 raise BotError(f'Ошибка от API: {error_text}')
         except BotError:
             raise

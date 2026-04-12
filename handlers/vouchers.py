@@ -3,7 +3,8 @@ from keyboards.vouchers import voucher_builder, variations_builder, confirm_vari
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from logic.vouchers import get_voucher_items, get_voucher_variations, variation_info_builder
+from logic.vouchers import get_voucher_items, get_voucher_variations, variation_info_builder, voucher_ordering, voucher_text_loader
+from keyboards.steam_refill_keyboards import inline_main_menu
 
 
 class VoucherOrdering(StatesGroup):
@@ -88,5 +89,11 @@ async def get_info_current_variation_handler(callback: types.CallbackQuery, stat
 
 @router.callback_query(F.data.startswith('buy_voucher_'))
 async def buy_voucher_processing(callback: types.CallbackQuery, state: FSMContext):
-    voucher_id = callback.data.split('_')[-1]
-    var_id = callback.data.split('_')[-2]
+    voucher_id = int(callback.data.split('_')[-1])
+    var_id = int(callback.data.split('_')[-2])
+    data = await state.get_data()
+    var_info = data.get('var')
+    voucher_info = await voucher_ordering(customer_id=callback.from_user.id, variation_info=var_info, voucher_id=voucher_id, var_id=var_id)
+    text = await voucher_text_loader(voucher_info)
+    await callback.message.edit_text(text, parse_mode='HTML', reply_markup=inline_main_menu())
+    await callback.answer()

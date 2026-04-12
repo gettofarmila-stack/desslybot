@@ -24,6 +24,16 @@ async def charge_balance(user, amount):
         raise DontHaveFunds('Недостаточно средств на балансе!')
     user.balance -= decimal_amount
 
+async def charge_balance_id(user, amount):
+    decimal_amount = Decimal(str(amount))
+    async with Session() as session:
+        async with session.begin():
+            user_obj = await session.execute(select(User).where(User.user_id == user))
+            user = user_obj.scalar_one_or_none()
+            if user.balance < decimal_amount:
+                raise DontHaveFunds('Недостаточно средств на балансе!')
+            user.balance -= decimal_amount
+
 async def refund_balance(user_id, amount):
     async with Session() as session:
         async with session.begin():
