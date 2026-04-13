@@ -1,9 +1,11 @@
+import logging
 from aiogram import types, F, Router
-from keyboards.vouchers import voucher_builder, variations_builder, confirm_variation_builder
+from keyboards.vouchers import voucher_builder, variations_builder, confirm_variation_builder, voucher_history_builder, voucher_history_select_builder
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from logic.vouchers import get_voucher_items, get_voucher_variations, variation_info_builder, voucher_ordering, voucher_text_loader
+from logic.vouchers import get_voucher_items, get_voucher_variations, variation_info_builder, voucher_ordering, voucher_text_loader, current_voucher_text_loader
+from logic.repository.voucher_rep import get_voucher_history_rep
 from keyboards.steam_refill_keyboards import inline_main_menu
 
 
@@ -97,3 +99,34 @@ async def buy_voucher_processing(callback: types.CallbackQuery, state: FSMContex
     text = await voucher_text_loader(voucher_info)
     await callback.message.edit_text(text, parse_mode='HTML', reply_markup=inline_main_menu())
     await callback.answer()
+
+@router.callback_query(F.data == 'voucher_order_history')
+async def voucher_order_history_handler(callback: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    if data.get('vouchers'):
+        vouchers = data.get('vouchers')
+    else:
+        vouchers = await get_voucher_history_rep(callback.from_user.id)
+        if len(vouchers) == 0:
+            return await callback.message.edit_text('Вы ещё не покупали ваучеры!', reply_markup=voucher_history_builder(vouchers))
+        await state.update_data(vouchers=vouchers)
+    await callback.message.edit_caption(caption='Выбери свой ваучер:', reply_markup=voucher_history_builder(vouchers))
+
+@router.callback_query(F.data.startswith('voucher_page_'))
+async def voucher_order_history_page_handler(callback: types.CallbackQuery, state: FSMContext):
+    page = int(callback.data.split('_')[-1])
+    data = await state.get_data()
+    vouchers = data.get('vouchers')
+    await callback.message.edit_caption(caption='Выбери свой ваучер:', reply_markup=voucher_history_builder(vouchers, page))
+    await callback.answer()
+
+@router.callback_query(F.data.startswith('voucher_history_select_'))
+async def select_voucher_history_handler(callback: types.CallbackQuery):
+    try:
+        voucher_id = int(callback.data.split('_')[-1])
+        text = await current_voucher_text_loader(voucher_id)
+        await callback.message.edit_caption(caption=text, parse_mode='HTML', reply_markup=voucher_history_select_builder())
+        await callback.answer()
+    except Exception as e:
+        logging.error(f'При выборе ваучер хистори{e}')
+        await callback.message.edit_caption(caption=e)

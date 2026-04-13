@@ -12,3 +12,14 @@ async def add_voucher_info(owner_id, transaction_id, status, voucher_name, vouch
             await session.refresh(new_voucher)
         return new_voucher
     
+async def get_voucher_history_rep(uid):
+    async with Session() as session:
+        vouchers_obj = await session.execute(select(Voucher).where(Voucher.owner_id == int(uid)))
+        vouchers = vouchers_obj.scalars().all()
+        return vouchers
+    
+async def get_current_voucher(voucher_id):
+    async with Session() as session:
+        voucher_obj = await session.execute(select(Voucher).where(Voucher.id == int(voucher_id)))
+        voucher = voucher_obj.scalar_one_or_none()
+        return voucher

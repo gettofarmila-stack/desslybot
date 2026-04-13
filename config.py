@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path='config.env')
  
 DEBUG_MODE = False   # изменить на True, чтобы включить режим тестирования (позволяет тестировать функции без апи, допустим у вас там нет денег)
-
+REFERRAL_RATE = 0.005   # ставка по реферальной программе(процент отчислений за пополнения)
 #просто данные
 BOT_TOKEN = os.getenv('TOKEN')
 DESSLY_TOKEN = os.getenv('DESSLY_TOKEN')

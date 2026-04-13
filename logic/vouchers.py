@@ -3,7 +3,7 @@ from utils.get_cache import VOUCHERS_CACHE
 from logic.api.voucher_api import get_voucher_info_api, buy_voucher_api
 from utils.exceptions import BotError
 from logic.repository.user_rep import charge_balance_id, refund_balance
-from logic.repository.voucher_rep import add_voucher_info
+from logic.repository.voucher_rep import add_voucher_info, get_current_voucher
 
 def get_voucher_items():
     return [(v.get('name'), v.get('id')) for v in VOUCHERS_CACHE if v.get('name')]
@@ -42,12 +42,33 @@ async def voucher_ordering(customer_id, variation_info, voucher_id, var_id):
 async def voucher_text_loader(voucher):
     data = voucher.voucher
     v_data = data[0] if isinstance(data, list) else data
-    serial = v_data.get('serial_number') or '🧾 Отсутствует'
+    serial = v_data.get('serialNumber') or '🧾 Отсутствует'
     pin = v_data.get('pin') or '❌ Ошибка кода'
     expiry = v_data.get('expiration') or '♾ Безлимит'
     return (
         f"<b>🎉 Поздравляем с покупкой!</b>\n"
         f"————————————————\n"
+        f"🛍 <b>Товар:</b> <code>{voucher.voucher_name}</code>\n"
+        f"🔑 <b>Код активации:</b>\n\n"
+        f"<code>{pin}</code>\n\n"
+        f"————————————————\n"
+        f"📋 <b>S/N:</b> <code>{serial}</code>\n"
+        f"⏳ <b>Годен до:</b> <i>{expiry}</i>\n"
+        f"————————————————\n\n"
+        f"<b>💡 Инструкция:</b> Введите код в приложении или на сайте сервиса. "
+        f"Если будут проблемы - пиши в поддержку!"
+    )
+
+async def current_voucher_text_loader(voucher_id):
+    voucher = await get_current_voucher(voucher_id)
+    if voucher is None:
+        raise BotError('Произошла ошибка, попробуйте снова.')
+    data = voucher.voucher
+    voucher_info = data[0] if isinstance(data, list) else data
+    serial = voucher_info.get('serialNumber') or '🧾 Отсутствует'
+    pin = voucher_info.get('pin') or '❌ Ошибка кода'
+    expiry = voucher_info.get('expiration') or '♾ Безлимит'
+    return(
         f"🛍 <b>Товар:</b> <code>{voucher.voucher_name}</code>\n"
         f"🔑 <b>Код активации:</b>\n\n"
         f"<code>{pin}</code>\n\n"
