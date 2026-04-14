@@ -4,6 +4,7 @@ from database.models import User
 from database.engine import Session
 from utils.exceptions import DontHaveFunds, UserNotRegister
 from decimal import Decimal
+from config import REFERRAL_RATE
 
 
 async def is_register(uid):
@@ -21,9 +22,17 @@ async def registrate_user(uid, referrer_id):
             session.add(new_user)
         
 async def refill_user_balance_rep(session, amount, user_id):
+    amount_decimal = Decimal(str(amount))
     user_obj = await session.execute(select(User).where(User.user_id == user_id))
     user = user_obj.scalar_one_or_none()
-    user.balance += Decimal(str(amount))
+    user.balance += amount_decimal
+    if user.referrer_id:
+        referrer_obj = await session.execute(select(User).where(User.user_id == user.referrer_id))
+        referrer = referrer_obj.scalar_one_or_none()
+        if referrer:
+            ref_bonus = Decimal(str(REFERRAL_RATE)) * amount_decimal
+            ref_bonus = ref_bonus.quantize(Decimal('0.01'))
+            referrer.balance += ref_bonus
 
 async def get_user_object(uid):
     async with Session() as session:
