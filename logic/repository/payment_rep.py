@@ -3,7 +3,7 @@ import logging
 from database.engine import Session
 from database.models import Transaction
 from utils.exceptions import BotError
-from sqlalchemy import delete
+from sqlalchemy import delete, select
 
 
 async def create_payment_rep(session, user_id, amount):
@@ -25,3 +25,8 @@ async def delete_payment_rep(payment_id):
     async with Session() as session:
         await session.execute(delete(Transaction).where(Transaction.id == int(payment_id)))
         await session.commit()
+
+async def get_payment_info_rep(session, payment_id):
+    payment = await session.execute(select(Transaction).where(Transaction.id == payment_id))
+    return payment.scalar_one_or_none()
+

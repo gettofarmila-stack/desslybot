@@ -20,6 +20,11 @@ async def registrate_user(uid, referrer_id):
             new_user = User(user_id=uid, referrer_id=int(referrer_id))
             session.add(new_user)
         
+async def refill_user_balance_rep(session, amount, user_id):
+    user_obj = await session.execute(select(User).where(User.user_id == user_id))
+    user = user_obj.scalar_one_or_none()
+    user.balance += Decimal(str(amount))
+
 async def get_user_object(uid):
     async with Session() as session:
         user_obj = await session.execute(select(User).where(User.user_id == int(uid)))

@@ -8,3 +8,9 @@ def payment_builder(url, payment_id):
     builder.row(types.InlineKeyboardButton(text='Я уже оплатил', callback_data=f'payment_update_{payment_id}', style='primary'))
     builder.row(types.InlineKeyboardButton(text='Главное меню', callback_data='main_menu', style='danger'))
     return builder.as_markup()
+
+def payment_check_builder(payment_id):
+    builder = InlineKeyboardBuilder()
+    builder.row(types.InlineKeyboardButton(text='Проверить', callback_data=f'payment_update_{payment_id}', style='primary'))
+    builder.row(types.InlineKeyboardButton(text='Главное меню', callback_data='main_menu', style='danger'))
+    return builder.as_markup()
