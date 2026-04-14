@@ -12,7 +12,7 @@ def profile_builder():
 
 def order_history_builder():
     builder = InlineKeyboardBuilder()
-    builder.row(types.InlineKeyboardButton(text='Steam', callback_data='steam_order_history', style='primary'), types.InlineKeyboardButton(text='Ваучеры', callback_data='voucher_order_history', style='primary'))
+    builder.row(types.InlineKeyboardButton(text='Ваучеры', callback_data='voucher_order_history', style='primary'))
     builder.row(types.InlineKeyboardButton(text='Назад', callback_data='profile', style='danger'))
     builder.row(types.InlineKeyboardButton(text='Главное меню', callback_data='main_menu', style='danger'))
     return builder.as_markup()
@@ -24,4 +24,3 @@ def referral_system_builder(user_referrals):
     builder.row(types.InlineKeyboardButton(text='Назад', callback_data='profile', style='danger'))
     builder.row(types.InlineKeyboardButton(text='Главное меню', callback_data='main_menu', style='danger'))
     return builder.as_markup()
-

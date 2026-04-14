@@ -25,7 +25,3 @@ async def referral_system_handler(callback: types.CallbackQuery, bot: Bot):
     ref_link = get_referral_link(callback.from_user.id, bot_user.username)
     await callback.message.edit_caption(caption=f'Ваша реферальная ссылка:\n<code>{ref_link}</code>', parse_mode='HTML', reply_markup=referral_system_builder(ref_counter))
     await callback.answer()
-
-@router.callback_query(F.data == 'steam_order_history')
-async def steam_order_history_handler(callback: types.CallbackQuery):
-    pass

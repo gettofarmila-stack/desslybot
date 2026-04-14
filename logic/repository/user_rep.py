@@ -15,7 +15,9 @@ async def is_register(uid):
 async def registrate_user(uid, referrer_id):
     async with Session() as session:
         async with session.begin():
-            new_user = User(user_id=uid, referrer_id=referrer_id)
+            if referrer_id is None:
+                referrer_id = 0
+            new_user = User(user_id=uid, referrer_id=int(referrer_id))
             session.add(new_user)
         
 async def get_user_object(uid):

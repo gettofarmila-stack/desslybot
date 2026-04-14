@@ -18,6 +18,7 @@ class User(Base):
 
     orders = relationship('Order', back_populates='user')
     vouchers = relationship('Voucher', back_populates='user')
+    transactions = relationship('Transaction', back_populates='user')
 
 class Order(Base):
     __tablename__ = 'orders'
@@ -46,6 +47,16 @@ class Voucher(Base):
     voucher = Column(JSON)
 
     user = relationship('User', back_populates='vouchers')
+
+class Transaction(Base):
+    __tablename__ = 'transactions'
+    id = Column(Integer, primary_key=True)
+    owner_id = Column(BigInteger, ForeignKey('users.user_id'))
+    uuid = Column(String)
+    amount = Column(Numeric(10, 2), default=0.00)
+    payment_status = Column(String)
+
+    user = relationship('User', back_populates='transactions')
 
 async def init_models():
     async with engine.begin() as conn:
