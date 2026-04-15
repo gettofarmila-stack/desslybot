@@ -105,6 +105,7 @@ async def admin_charge_user_balance_second_handler(message: types.Message, state
     uid = data.get('user_id')
     text = await charge_user_balance_admin(uid, amount)
     await message.answer(text, reply_markup=inline_main_menu())
+    await state.clear()
 
 @router.callback_query(F.data == 'admin_get_user_stats')
 async def admin_get_user_stats_handler(callback: types.CallbackQuery, state: FSMContext):
@@ -117,6 +118,7 @@ async def admin_get_user_stats_processing_handler(message: types.Message, state:
     uid = message.text
     text = await get_user_stats_admin(uid)
     await message.answer(text, reply_markup=inline_main_menu())
+    await state.clear()
 
 @router.callback_query(F.data == 'admin_delete_user')
 async def admin_delete_user_handler(callback: types.CallbackQuery, state: FSMContext):
@@ -129,3 +131,4 @@ async def admin_delete_user_processing_handler(message: types.Message, state: FS
     uid = message.text
     text = await delete_user_admin(uid)
     await message.answer(text, reply_markup=inline_main_menu())
+    await state.clear()

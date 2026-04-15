@@ -92,4 +92,4 @@ async def delete_user_admin(user_id):
                 return('Успешно удалено!')
             except Exception as e:
                 logging.error(f'Ошибка: {e}')
-                raise
+                return f"Ошибка при удалении: {e}"
