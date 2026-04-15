@@ -20,9 +20,13 @@ async def topup_handler(callback: types.CallbackQuery, state: FSMContext):
 
 @router.message(PaymentOrdering.waiting_for_amount)
 async def topup_creating_handler(message: types.Message, state: FSMContext):
-    amount = int(message.text)
-    if amount < 1:
-        return await message.answer(caption='Слишком маленькая сумма пополнения! Не меньше 1$!')
+    amount_str = message.text
+    try:
+        amount = float(amount_str.replace(',', '.'))
+        if amount < 0.1:
+            return await message.answer("Минимальная сумма пополенния 0.1$")
+    except ValueError:
+        await message.answer("Нужно ввести число!")
     payment = await create_payment(message.from_user.id, amount)
     url, payment_id = payment.get('url'), payment.get('payment_id')
     await state.update_data(url=url)

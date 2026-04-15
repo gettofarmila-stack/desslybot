@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from aiogram import Router, Dispatcher, types, Bot
-from handlers import common, steam_refill, steam_gifts, error, vouchers, profile, payment
+from handlers import common, steam_refill, steam_gifts, error, vouchers, profile, payment, admin
 from config import BOT_TOKEN
 from database.models import init_models
 from utils.get_cache import on_startup
@@ -18,7 +18,7 @@ async def main():
     bot = Bot(token=BOT_TOKEN)
     dp = Dispatcher()
     dp.include_router(error.router)
-    dp.include_routers(router, common.router, steam_refill.router, steam_gifts.router, vouchers.router, profile.router, payment.router)
+    dp.include_routers(router, common.router, steam_refill.router, steam_gifts.router, vouchers.router, profile.router, payment.router, admin.router)
 
     dp.startup.register(on_startup)
     logging.info('Бот запущен')

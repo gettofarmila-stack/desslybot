@@ -44,8 +44,13 @@ async def steam_refill_choise_amount_handler(callback: types.CallbackQuery, stat
 
 @router.message(RefillProcessing.waiting_for_amount)
 async def steam_refill_amount_handler(message: types.Message, state: FSMContext):
-    if not message.text.isdigit():
-        return await message.answer('Введи целое число! Попробуй ещё раз.')
+    amount_str = message.text
+    try:
+        amount = float(amount_str.replace(',', '.'))
+        if amount < 0.1:
+            return await message.answer("Минимальная сумма пополенния 0.1$")
+    except ValueError:
+        await message.answer("Нужно ввести число!")
     data = await state.get_data()
     currency = data.get('user_currency')
     login = data.get('user_login')

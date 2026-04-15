@@ -24,12 +24,13 @@ async def cmd_start(message: types.Message, command: CommandObject=None):
         registrate = await registrate_user(user_id, args)
         await message.answer('Успешная регистрация!')
     photo = 'AgACAgQAAxkBAANvaddiaCdKNqlPQ37m_We4Xp0KFcsAAigNaxsY08BS6iU2QfZy8-gBAAMCAAN5AAM7BA'
-    await message.answer_photo(photo=photo, caption=f'Добро пожаловать {message.from_user.first_name}, мы работаем 24/7!', reply_markup=main_menu_builder())
+    await message.answer_photo(photo=photo, caption=f'Добро пожаловать {message.from_user.first_name}, мы работаем 24/7!', reply_markup=main_menu_builder(message.from_user.id))
 
 @router.callback_query(F.data == 'main_menu')
 async def main_menu_callback(callback: types.CallbackQuery):
     photo = 'AgACAgQAAxkBAANvaddiaCdKNqlPQ37m_We4Xp0KFcsAAigNaxsY08BS6iU2QfZy8-gBAAMCAAN5AAM7BA'
-    await callback.message.edit_media(media=InputMediaPhoto(media=photo, caption=f'Добро пожаловать {callback.from_user.first_name}, мы работаем 24/7!'), reply_markup=main_menu_builder())
+    uid = callback.from_user.id
+    await callback.message.edit_media(media=InputMediaPhoto(media=photo, caption=f'Добро пожаловать {callback.from_user.first_name}, мы работаем 24/7!'), reply_markup=main_menu_builder(uid))
     await callback.answer()
 
 @router.message(Command("getid"))
