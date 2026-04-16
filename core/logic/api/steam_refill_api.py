@@ -78,4 +78,4 @@ async def checking_exchange_rate_api(currency):
                 raise BotError(f'Ошибка от API: {error_text}')
         except Exception as e:
             logging.error(f'Ошибка сервиса в API: {e}')
-            raise BotError(f'Сервис временно недоступен, попробуйте позже!')
+            raise BotError(f'Сервис временно недоступен, попробуйте позже!: {e}')

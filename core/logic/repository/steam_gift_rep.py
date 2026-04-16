@@ -12,7 +12,6 @@ async def create_steam_gift_order(customer_id, api_data, price):
                 user = user_obj.scalar_one_or_none()
                 if not user:
                     raise(UserNotRegister('Вы не зарегестрированы!'))
-                await charge_balance(amount=price, user=user)
                 transaction_id = api_data.get('transaction_id')
                 status = api_data.get('status')
                 new_order = Order(owner_id=customer_id, transaction_id=transaction_id, status=status)

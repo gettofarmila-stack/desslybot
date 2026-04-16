@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException, Depends, status, Header
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from core.database.engine import Session
 from core.database.models import User
+from core.database.engine import Session
 
 async def get_db():
     async with Session() as session:

@@ -14,3 +14,4 @@ async def check_exchange_rate(amount, currency):
     else:
         total_sum = (amount / exchange_rate) * 1.02
     return round(total_sum, 2)
+
