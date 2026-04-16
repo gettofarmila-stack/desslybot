@@ -40,6 +40,10 @@ async def get_user_object(uid):
         user = user_obj.scalar_one_or_none()
         return user
     
+async def get_user_object_session(uid, session):
+    user_obj = await session.execute(select(User).where(User.user_id == int(uid)))
+    return user_obj.scalar_one_or_none()
+    
 async def get_user_referrals(uid):
     async with Session() as session:
         ref_obj = await session.execute(select(User).where(User.referrer_id == int(uid)))

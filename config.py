@@ -16,6 +16,7 @@ REVIEW_LINK = os.getenv('REVIEW_LINK')
 SERVICE_NAME = os.getenv('SERVICE_NAME')
 PROJECT_UUID = os.getenv('PROJECT_UUID')
 SIGN_2328 = str(os.getenv('SIGN_2328'))
+DOCS_LINK = os.getenv('DOCS_LINK')
 
 #фотки, если хотите то тоже замените
 MAIN_PHOTO = 'AgACAgQAAxkBAANvaddiaCdKNqlPQ37m_We4Xp0KFcsAAigNaxsY08BS6iU2QfZy8-gBAAMCAAN5AAM7BA'

@@ -15,6 +15,7 @@ class User(Base):
     reg_date = Column(DateTime, default=datetime.now)
     balance = Column(Numeric(10, 2), default=0.00)
     total_spend = Column(Numeric(10, 2), default=0.00)
+    api_key = Column(String, unique=True, nullable=True)
 
     orders = relationship('Order', back_populates='user')
     vouchers = relationship('Voucher', back_populates='user')

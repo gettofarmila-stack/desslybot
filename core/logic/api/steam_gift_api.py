@@ -39,6 +39,8 @@ async def get_game_info_api(app_id):
                 error_text = API_ERRORS.get(error_code, 'Неизвестная ошибка от API')
                 logging.error(f'Ошибка API: {error_text}')
                 raise BotError(f'Ошибка от API: {error_text}')
+        except BotError as e:
+            raise
         except Exception as e:
             logging.error(f'Ошибка системы: {e}')
             raise BotError('Сервис временно недоступен, повторите попытку позже.')
