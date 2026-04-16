@@ -1,7 +1,7 @@
 
 import logging
-from database.engine import Session
-from database.models import Transaction
+from core.database.engine import Session
+from core.database.models import Transaction
 from utils.exceptions import BotError
 from sqlalchemy import delete, select
 

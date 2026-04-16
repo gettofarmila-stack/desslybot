@@ -1,9 +1,9 @@
 from aiogram import types, Router, F
-from keyboards.payment_menu import payment_builder, payment_check_builder
+from client.keyboards.payment_menu import payment_builder, payment_check_builder
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from logic.payment import create_payment, check_payment
-from keyboards.steam_refill_keyboards import inline_main_menu
+from core.logic.payment import create_payment, check_payment
+from client.keyboards.steam_refill_keyboards import inline_main_menu
 
 
 class PaymentOrdering(StatesGroup):

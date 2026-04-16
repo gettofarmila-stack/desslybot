@@ -1,10 +1,10 @@
 from aiogram import types, Router, F, Bot
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from logic.admin import is_admin, get_global_stats, broadcast_manage, refill_user_balance, charge_user_balance_admin, get_user_stats_admin, delete_user_admin
-from keyboards.main_menu import back_to_admin_panel_builder
+from core.logic.admin import is_admin, get_global_stats, broadcast_manage, refill_user_balance, charge_user_balance_admin, get_user_stats_admin, delete_user_admin
+from client.keyboards.main_menu import back_to_admin_panel_builder
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from keyboards.steam_refill_keyboards import inline_main_menu
+from client.keyboards.steam_refill_keyboards import inline_main_menu
 
 class RefillProcessing(StatesGroup):
     waiting_for_broadcast_text = State()

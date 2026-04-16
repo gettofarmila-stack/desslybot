@@ -4,8 +4,8 @@ import asyncio
 import logging
 from config import DESSLY_TOKEN, DEBUG_MODE
 from utils.exceptions import API_ERRORS, BotError
-from logic.repository.steam_refill_rep import create_steam_topup_order_db, update_order_status_db, delete_order_db
-from logic.repository.user_rep import refund_balance
+from core.logic.repository.steam_refill_rep import create_steam_topup_order_db, update_order_status_db, delete_order_db
+from core.logic.repository.user_rep import refund_balance
 
 
 async def check_steam_login_api(login: str, amount: float):

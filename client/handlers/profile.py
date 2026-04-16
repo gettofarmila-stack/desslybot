@@ -1,7 +1,7 @@
-from keyboards.profile_menu import profile_builder, order_history_builder, referral_system_builder
+from client.keyboards.profile_menu import profile_builder, order_history_builder, referral_system_builder
 from aiogram import types, Router, F, Bot
-from logic.user_logic import profile_text_builder, get_referral_link
-from logic.repository.user_rep import get_user_referrals
+from core.logic.user_logic import profile_text_builder, get_referral_link
+from core.logic.repository.user_rep import get_user_referrals
 from aiogram.fsm.context import FSMContext
 
 

@@ -1,12 +1,12 @@
 import logging
 from aiogram import types, F, Router
-from keyboards.vouchers import voucher_builder, variations_builder, confirm_variation_builder, voucher_history_builder, voucher_history_select_builder
+from client.keyboards.vouchers import voucher_builder, variations_builder, confirm_variation_builder, voucher_history_builder, voucher_history_select_builder
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from logic.vouchers import get_voucher_items, get_voucher_variations, variation_info_builder, voucher_ordering, voucher_text_loader, current_voucher_text_loader
-from logic.repository.voucher_rep import get_voucher_history_rep
-from keyboards.steam_refill_keyboards import inline_main_menu
+from core.logic.vouchers import get_voucher_items, get_voucher_variations, variation_info_builder, voucher_ordering, voucher_text_loader, current_voucher_text_loader
+from core.logic.repository.voucher_rep import get_voucher_history_rep
+from client.keyboards.steam_refill_keyboards import inline_main_menu
 
 
 class VoucherOrdering(StatesGroup):

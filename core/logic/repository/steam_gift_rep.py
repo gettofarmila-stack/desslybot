@@ -1,8 +1,8 @@
-from database.engine import Session
-from database.models import Order, User
+from core.database.engine import Session
+from core.database.models import Order, User
 from utils.exceptions import DontHaveFunds, UserNotRegister
 from sqlalchemy import select
-from logic.repository.user_rep import charge_balance
+from core.logic.repository.user_rep import charge_balance
 import logging
 
 async def create_steam_gift_order(customer_id, api_data, price):

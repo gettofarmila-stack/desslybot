@@ -1,4 +1,4 @@
-from database.models import User, Transaction
+from core.database.models import User, Transaction
 from sqlalchemy import select
 from utils.exceptions import BotError
 

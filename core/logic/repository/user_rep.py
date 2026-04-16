@@ -1,7 +1,7 @@
 import logging
 from sqlalchemy import select
-from database.models import User
-from database.engine import Session
+from core.database.models import User
+from core.database.engine import Session
 from utils.exceptions import DontHaveFunds, UserNotRegister
 from decimal import Decimal
 from config import REFERRAL_RATE

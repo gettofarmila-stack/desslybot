@@ -1,9 +1,10 @@
 import asyncio
 import logging
 from aiogram import Router, Dispatcher, types, Bot
-from handlers import common, steam_refill, steam_gifts, error, vouchers, profile, payment, admin
+from client.handlers import admin, common, error, payment, profile, steam_gifts, steam_refill
+from client.handlers import vouchers
 from config import BOT_TOKEN
-from database.models import init_models
+from core.database.models import init_models
 from utils.get_cache import on_startup
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

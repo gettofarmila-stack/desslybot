@@ -1,9 +1,9 @@
 import asyncio
 import logging
 from config import ADMIN_LIST
-from logic.repository.admin_rep import get_global_stats_rep, get_all_user_ids_rep, delete_user_rep
-from logic.repository.user_rep import refill_user_balance_rep, charge_balance_id, get_user_object
-from database.engine import Session
+from core.logic.repository.admin_rep import get_global_stats_rep, get_all_user_ids_rep, delete_user_rep
+from core.logic.repository.user_rep import refill_user_balance_rep, charge_balance_id, get_user_object
+from core.database.engine import Session
 from aiogram.exceptions import TelegramRetryAfter, TelegramForbiddenError
 from utils.exceptions import BotError
 

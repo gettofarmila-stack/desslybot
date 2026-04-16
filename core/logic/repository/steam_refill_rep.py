@@ -1,8 +1,8 @@
 import logging
 from sqlalchemy import select, delete
-from database.engine import Session
-from database.models import Order, User
-from logic.repository.user_rep import charge_balance
+from core.database.engine import Session
+from core.database.models import Order, User
+from core.logic.repository.user_rep import charge_balance
 from utils.exceptions import DontHaveFunds, UserNotRegister, BotError
 
 async def create_steam_topup_order_db(customer_id: int, transaction_id: str, status: str, amount):

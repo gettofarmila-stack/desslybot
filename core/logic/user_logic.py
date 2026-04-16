@@ -1,5 +1,5 @@
 
-from logic.repository.user_rep import get_user_object
+from core.logic.repository.user_rep import get_user_object
 
 async def profile_text_builder(uid):
     user = await get_user_object(uid)

@@ -3,9 +3,9 @@ import logging
 from aiogram import types, Router, F
 from aiogram.types import InputMediaPhoto
 from aiogram.filters.command import CommandStart, CommandObject, Command
-from logic.repository.user_rep import is_register, registrate_user
+from core.logic.repository.user_rep import is_register, registrate_user
 from config import SERVICE_NAME, REFERRAL_RATE
-from keyboards.main_menu import main_menu_builder
+from client.keyboards.main_menu import main_menu_builder
 
 router = Router()
 

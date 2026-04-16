@@ -2,7 +2,7 @@ import asyncio
 from sqlalchemy.orm import DeclarativeBase, relationship
 from sqlalchemy import Column, Integer, String, BigInteger, DateTime, Numeric, ForeignKey, JSON
 from datetime import datetime
-from database.engine import engine
+from core.database.engine import engine
 
 class Base(DeclarativeBase):
     pass

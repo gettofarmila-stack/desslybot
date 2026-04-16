@@ -1,9 +1,9 @@
 import logging
 from utils.get_cache import VOUCHERS_CACHE
-from logic.api.voucher_api import get_voucher_info_api, buy_voucher_api
+from core.logic.api.voucher_api import get_voucher_info_api, buy_voucher_api
 from utils.exceptions import BotError
-from logic.repository.user_rep import charge_balance_id, refund_balance
-from logic.repository.voucher_rep import add_voucher_info, get_current_voucher
+from core.logic.repository.user_rep import charge_balance_id, refund_balance
+from core.logic.repository.voucher_rep import add_voucher_info, get_current_voucher
 
 def get_voucher_items():
     return [(v.get('name'), v.get('id')) for v in VOUCHERS_CACHE if v.get('name')]

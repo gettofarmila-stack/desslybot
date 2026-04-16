@@ -1,6 +1,6 @@
 from sqlalchemy import select
-from database.engine import Session
-from database.models import Voucher
+from core.database.engine import Session
+from core.database.models import Voucher
 
 
 async def add_voucher_info(owner_id, transaction_id, status, voucher_name, voucher_info):

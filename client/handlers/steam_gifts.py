@@ -1,11 +1,11 @@
 from aiogram import types, F, Router
-from keyboards.steam_gifts import games_builder, editions_builder, regions_builder
-from keyboards.steam_refill_keyboards import inline_main_menu
+from client.keyboards.steam_gifts import games_builder, editions_builder, regions_builder
+from client.keyboards.steam_refill_keyboards import inline_main_menu
 from utils.get_cache import GAMES_CACHE
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from logic.steam_gift import searching_games, game_info_rendering, steam_order_processing
+from core.logic.steam_gift import searching_games, game_info_rendering, steam_order_processing
 from config import INVITE_LINK_PHOTO
 from aiogram.types import InputMediaPhoto
 class GameSearching(StatesGroup):

@@ -1,8 +1,8 @@
-from logic.api.payment_api import create_payment_api, check_payment_api
-from logic.repository.payment_rep import create_payment_rep, update_payment_rep, get_payment_info_rep
-from logic.repository.user_rep import refill_user_balance_rep
+from core.logic.api.payment_api import create_payment_api, check_payment_api
+from core.logic.repository.payment_rep import create_payment_rep, update_payment_rep, get_payment_info_rep
+from core.logic.repository.user_rep import refill_user_balance_rep
 from utils.exceptions import BotError
-from database.engine import Session
+from core.database.engine import Session
 from decimal import Decimal
 import logging
 

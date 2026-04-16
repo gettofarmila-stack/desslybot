@@ -2,8 +2,8 @@ import json
 import asyncio
 import logging
 import time
-from logic.api.steam_gift_api import get_games_list
-from logic.api.voucher_api import get_vouchers_api
+from core.logic.api.steam_gift_api import get_games_list
+from core.logic.api.voucher_api import get_vouchers_api
 
 GAMES_CACHE = []
 VOUCHERS_CACHE = []

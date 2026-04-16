@@ -1,5 +1,5 @@
-from logic.api.steam_gift_api import get_game_info_api, create_gift_order_api
-from logic.repository.steam_gift_rep import create_steam_gift_order
+from core.logic.api.steam_gift_api import get_game_info_api, create_gift_order_api
+from core.logic.repository.steam_gift_rep import create_steam_gift_order
 from utils.exceptions import BotError, UserNotRegister, DontHaveFunds
 import asyncio
 
