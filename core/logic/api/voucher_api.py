@@ -15,7 +15,7 @@ async def get_vouchers_api():
             if raw_data.get('products'):
                 return raw_data
             error_text = API_ERRORS.get(raw_data.get('error_code'), 'Unknown API Error')
-            raise Exception(f'API Dessly вернуло ошибку: {error_text}')
+            raise BotError(f'API Dessly вернуло ошибку: {error_text}')
         
 async def get_voucher_info_api(id):
     async with aiohttp.ClientSession() as session:

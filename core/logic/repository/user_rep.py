@@ -81,3 +81,11 @@ async def refund_balance(user_id, amount):
                 raise UserNotRegister('Вы не зарегестрированы! Введите /start для регистрации')
             user.balance += Decimal(str(amount))
             user.total_spend -= Decimal(str(amount))
+
+async def refund_fastapi_balance(user, amount, session):
+    if not user:
+        logging.error(f'Юзеру {user.user_id} не удалось вернуть деньги')
+        raise UserNotRegister('Вы не зарегестрированы! Введите /start для регистрации')
+    user.balance += Decimal(str(amount))
+    user.total_spend -= Decimal(str(amount))
+    session.commit()

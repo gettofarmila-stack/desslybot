@@ -2,8 +2,8 @@ import logging
 from utils.get_cache import VOUCHERS_CACHE
 from core.logic.api.voucher_api import get_voucher_info_api, buy_voucher_api
 from utils.exceptions import BotError
-from core.logic.repository.user_rep import charge_balance_id, refund_balance
-from core.logic.repository.voucher_rep import add_voucher_info, get_current_voucher
+from core.logic.repository.user_rep import charge_balance_id, refund_balance, charge_balance, refund_fastapi_balance
+from core.logic.repository.voucher_rep import add_voucher_info, get_current_voucher, add_voucher_info_fastapi
 
 def get_voucher_items():
     return [(v.get('name'), v.get('id')) for v in VOUCHERS_CACHE if v.get('name')]
@@ -38,6 +38,24 @@ async def voucher_ordering(customer_id, variation_info, voucher_id, var_id):
             logging.error(f'Возврат юзеру {customer_id} денег {price}$. Ошибка: {e}')
             await refund_balance(customer_id, price)
         raise
+
+async def voucher_ordering_fastapi(user, root_id, variant_id, db):
+    charged = False
+    variations = await get_voucher_info_api(root_id)
+    voucher_info = variations.get('variations', [])
+    variant_info = next((voucher for voucher in voucher_info if voucher['id'] == variant_id), None)
+    price, name = variant_info.get('price'), variant_info.get('name')
+    try:
+        await charge_balance(user, price)
+        charged = True
+        voucher_order_info = await buy_voucher_api(voucher_id=root_id, var_id=variant_id)
+        transaction_id, status, voucher_info = voucher_order_info.get('transaction_uuid'), voucher_order_info.get('status'), voucher_order_info.get('vouchers')
+        await add_voucher_info_fastapi(session=db, user=user, transaction_id=transaction_id, status=status, voucher_name=name, voucher_info=voucher_info)
+        return voucher_order_info
+    except Exception as e:
+        if charged is True:
+            logging.error(f'Возврат юзеру ID:{user.user_id} - {price}$. Ошибка: {e}')
+            await refund_fastapi_balance(user, price, db)
 
 async def voucher_text_loader(voucher):
     data = voucher.voucher

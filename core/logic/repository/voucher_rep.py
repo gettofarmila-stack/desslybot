@@ -12,6 +12,10 @@ async def add_voucher_info(owner_id, transaction_id, status, voucher_name, vouch
             await session.refresh(new_voucher)
         return new_voucher
     
+async def add_voucher_info_fastapi(session, user, transaction_id, status, voucher_name, voucher_info):
+    new_voucher = Voucher(owner_id=user.user_id, transaction_id=transaction_id, status=status, voucher_name=voucher_name, voucher=voucher_info)
+    session.add(new_voucher)
+    
 async def get_voucher_history_rep(uid):
     async with Session() as session:
         vouchers_obj = await session.execute(select(Voucher).where(Voucher.owner_id == int(uid)))

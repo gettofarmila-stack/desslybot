@@ -47,7 +47,7 @@ async def create_steam_topup_order_api(customer_id, login: str, amount: float):
         data = await call_topup_api(login, amount)
         if data.get('transaction_id'):
             await update_order_status_db(order_in_db.id, data.get('transaction_id'), data.get('status'))
-            return f"✅ Заказ №{data.get('transaction_id')} успешно создан!"
+            return {'uuid': data.get('transaction_id'), 'status': data.get('status')}
         error_code = data.get('error_code')
         error_text = API_ERRORS.get(error_code, 'Ошибка API')
         await refund_balance(customer_id, amount)
